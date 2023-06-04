@@ -12,6 +12,7 @@
     ["johannes", "Panda"],
     ["ProlificPotato", "5717"],
     ["SyberNinja", "EUW"],
+    ["RobertFreeman", "1492"],
   ]);
 
   let playerData = new Map();
