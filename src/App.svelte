@@ -45,10 +45,6 @@
     playerData.get(name)[0].date_raw = losingStreak;
   }
 
-  function displayPlayerData() {
-    console.log(playerData);
-  }
-
   // Sorting player data based on elo for the leaderboard
   function sortingPlayerData() {
     const array = Array.from(playerData);
@@ -62,7 +58,6 @@
       await makeAPIRequest(name, tag);
     }
     sortingPlayerData();
-    displayPlayerData();
   });
 </script>
 
@@ -112,6 +107,14 @@
     align-items: center;
   }
 
+  @media screen and (max-width: 767px) {
+    .table-center {
+      display: flex;
+      justify-content: normal;
+      align-items: center;
+    }
+  }
+
   main {
     flex: 1;
     display: flex;
@@ -131,6 +134,7 @@
     font-family: sans-serif;
     min-width: 400px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    overflow-x: auto;
   }
 
   .styled-table thead tr {
