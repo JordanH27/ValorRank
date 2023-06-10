@@ -24,25 +24,32 @@
    */
   async function makeAPIRequest(name, tag) {
     const url = `https://api.henrikdev.xyz/valorant/v1/mmr-history/eu/${name}/${tag}`;
-    const response = await fetch(url);
-    const data = await response.json();
-    playerData = new Map(playerData);
-    playerData.set(name, data.data);
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
 
-    // Setting the mmrGain by using ranking_in_tier as the storage because im lazy
-    let mmrGain = 0;
-    for (let i = 0; i < data.data.length; i++) {
-      mmrGain = mmrGain + data.data[i].mmr_change_to_last_game;
+      if (data.status == "200") {
+        playerData.set(name, data.data);
+        playerData = new Map(playerData);
+
+        // Setting the mmrGain by using ranking_in_tier as the storage because im lazy
+        let mmrGain = 0;
+        for (let i = 0; i < data.data.length; i++) {
+          mmrGain = mmrGain + data.data[i].mmr_change_to_last_game;
+        }
+        playerData.get(name)[0].ranking_in_tier = mmrGain;
+
+        // Setting losing streak using date_raw as the storage beacause im lazy again
+        let losingStreak = 0;
+        while (data.data[losingStreak].mmr_change_to_last_game < 0) {
+          losingStreak++;
+        }
+
+        playerData.get(name)[0].date_raw = losingStreak;
+      }
+    } catch (error) {
+      console.error("Could not fetch:", name);
     }
-    playerData.get(name)[0].ranking_in_tier = mmrGain;
-
-    // Setting losing streak using date_raw as the storage beacause im lazy again
-    let losingStreak = 0;
-    while (data.data[losingStreak].mmr_change_to_last_game < 0) {
-      losingStreak++;
-    }
-
-    playerData.get(name)[0].date_raw = losingStreak;
   }
 
   // Sorting player data based on elo for the leaderboard
